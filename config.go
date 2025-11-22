@@ -13,8 +13,10 @@ type Config struct {
 	Engine        string        `mapstructure:"MOEX_ENGINE"`   // Торговая система (e.g., "stock")
 	Market        string        `mapstructure:"MOEX_MARKET"`   // Рынок (e.g., "shares")
 	PollInterval  time.Duration `mapstructure:"POLL_INTERVAL"` // Частота опроса (e.g., "10s")
-	KafkaBroker   string        `mapstructure:"KAFKA_BROKER"`  // Адрес Kafka (e.g., "localhost:9092")
-	KafkaTopic    string        `mapstructure:"KAFKA_TOPIC"`   // Название топика
+	KafkaUsername string        `mapstructure:"KAFKA_USERNAME"`
+	KafkaPassword string        `mapstructure:"KAFKA_PASSWORD"`
+	KafkaBroker   string        `mapstructure:"KAFKA_BROKER"` // Адрес Kafka (e.g., "localhost:9092")
+	KafkaTopic    string        `mapstructure:"KAFKA_TOPIC"`  // Название топика
 	MoexBaseURL   string        `mapstructure:"MOEX_BASE_URL"`
 	StateFilePath string        `mapstructure:"STATE_FILE_PATH"` // Файл для сохранения ID последней сделки
 }
@@ -26,9 +28,11 @@ func LoadConfig() (*Config, error) {
 	// Значения по умолчанию
 	v.SetDefault("MOEX_ENGINE", "stock")
 	v.SetDefault("MOEX_MARKET", "shares")
-	v.SetDefault("POLL_INTERVAL", "15s")
+	v.SetDefault("POLL_INTERVAL", "5s")
 	v.SetDefault("KAFKA_BROKER", "localhost:9092")
-	v.SetDefault("KAFKA_TOPIC", "iss_data")
+	v.SetDefault("KAFKA_TOPIC", "iss-data")
+	v.SetDefault("KAFKA_USERNAME", "admin")
+	v.SetDefault("KAFKA_PASSWORD", "admin-secret")
 	v.SetDefault("MOEX_BASE_URL", "https://iss.moex.com")
 	v.SetDefault("STATE_FILE_PATH", "./.last_trade_id")
 

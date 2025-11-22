@@ -17,7 +17,7 @@ func main() {
 	}
 
 	// 2. Инициализация Kafka продюсера
-	producer, err := NewKafkaProducer(cfg.KafkaBroker)
+	producer, err := NewKafkaProducer(cfg.KafkaBroker, cfg)
 	if err != nil {
 		log.Fatalf("Не удалось подключиться к Kafka: %v\n", err)
 	}

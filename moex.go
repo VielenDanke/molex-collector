@@ -161,7 +161,11 @@ func mapRowToTrade(row []interface{}, cols map[string]int) (Trade, error) {
 	if err != nil {
 		return trade, err
 	}
-	trade.TradeTime, _ = time.Parse("2006-01-02 15:04:05", tradeTimeStr)
+	tradeDateStr, err := getFieldString(row, cols, "TRADEDATE")
+	if err != nil {
+		return trade, err
+	}
+	trade.TradeTime, _ = time.Parse("2006-01-02 15:04:05", fmt.Sprintf("%s %s", tradeDateStr, tradeTimeStr))
 
 	trade.BoardID, _ = getFieldString(row, cols, "BOARDID")
 	trade.SecID, _ = getFieldString(row, cols, "SECID")

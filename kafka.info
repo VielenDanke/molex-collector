@@ -1,1 +1,2 @@
-https://hub.docker.com/r/apache/kafka
+./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic iss-data --consumer.config /etc/kafka/consumer.properties --property java.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf
+./kafka-topics.sh --create --topic iss-data --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 --command-config /etc/kafka/consumer.properties
