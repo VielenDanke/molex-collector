@@ -35,18 +35,6 @@ services:
       - ./kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf
       - kafka_data:/var/lib/kafka/data
 
-  moex-collector:
-    image: vielen1991/moex-collector:v2
-    container_name: moex-collector
-    hostname: moex-collector
-    networks:
-      - moex_collector
-    environment:
-      KAFKA_BROKER: kafka:29092
-      POLL_INTERVAL: 15s
-    depends_on:
-      - kafka
-
   # --- Cassandra Service ---
   cassandra:
     image: cassandra:5.0.6
@@ -71,10 +59,54 @@ services:
       NIFI_WEB_HTTP_PORT: 8443
       SINGLE_USER_CREDENTIALS_USERNAME: admin
       SINGLE_USER_CREDENTIALS_PASSWORD: secret_admin_password
+    volumes:
+      - nifi_data:/opt/nifi
     depends_on:
       - cassandra
       - kafka
 
+  # --- Spark Master ---
+  spark-master:
+    image: apache/spark:3.5.0-scala2.12-java11-ubuntu
+    container_name: spark-master
+    hostname: spark-master
+    user: root # Avoid permission issues with mounted volumes
+    # Explicit command to start the Master class
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
+    environment:
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_WEBUI_PORT=8080
+    ports:
+      - "8080:8080" # Web UI
+      - "7077:7077" # RPC Port
+    networks:
+      - moex_collector
+    volumes:
+      - spark-apps:/opt/spark/apps # Mount your JARs here
+
+  # --- Spark Worker ---
+  spark-worker:
+    image: apache/spark:3.5.0-scala2.12-java11-ubuntu
+    container_name: spark-worker
+    user: root
+    depends_on:
+      - spark-master
+    # Explicit command to start the Worker class and connect to Master
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    environment:
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=2g
+      - SPARK_WORKER_WEBUI_PORT=8081
+    ports:
+      - "8081:8081" # Worker Web UI
+    networks:
+      - moex_collector
+    volumes:
+      - spark-apps:/opt/spark/apps
+
 volumes:
   cassandra_data:
   kafka_data:
+  nifi_data:
+  spark-apps:

@@ -1,0 +1,16 @@
+version: '3.8'
+
+networks:
+  moex_collector:
+    driver: bridge
+
+services:
+  moex-collector:
+    image: vielen1991/moex-collector:v3
+    container_name: moex-collector
+    hostname: moex-collector
+    networks:
+      - moex_collector
+    environment:
+      KAFKA_BROKER: kafka:29092
+      POLL_INTERVAL: 15s
