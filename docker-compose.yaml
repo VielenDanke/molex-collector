@@ -67,7 +67,7 @@ services:
 
   # --- Spark Master ---
   spark-master:
-    image: apache/spark:3.5.0-scala2.12-java11-ubuntu
+    image: apache/spark:3.5.0
     container_name: spark-master
     hostname: spark-master
     user: root # Avoid permission issues with mounted volumes
@@ -84,10 +84,17 @@ services:
       - moex_collector
     volumes:
       - spark-apps:/opt/spark/apps # Mount your JARs here
+      - ./spark-jars/config-1.4.1.jar:/opt/spark/jars/config-1.4.1.jar
+      - ./spark-jars/java-driver-core-shaded-4.13.0.jar:/opt/spark/jars/java-driver-core-shaded-4.13.0.jar
+      - ./spark-jars/java-driver-shaded-guava-25.1-jre-graal-sub-1.jar:/opt/spark/jars/java-driver-shaded-guava-25.1-jre-graal-sub-1.jar
+      - ./spark-jars/native-protocol-1.5.0.jar:/opt/spark/jars/native-protocol-1.5.0.jar
+      - ./spark-jars/reactive-streams-1.0.3.jar:/opt/spark/jars/reactive-streams-1.0.3.jar
+      - ./spark-jars/spark-cassandra-connector-driver_2.12-3.5.0.jar:/opt/spark/jars/spark-cassandra-connector-driver_2.12-3.5.0.jar
+      - ./spark-jars/spark-cassandra-connector_2.12-3.5.0.jar:/opt/spark/jars/spark-cassandra-connector_2.12-3.5.0.jar
 
   # --- Spark Worker ---
   spark-worker:
-    image: apache/spark:3.5.0-scala2.12-java11-ubuntu
+    image: apache/spark:3.5.0
     container_name: spark-worker
     user: root
     depends_on:
@@ -104,6 +111,13 @@ services:
       - moex_collector
     volumes:
       - spark-apps:/opt/spark/apps
+      - ./spark-jars/config-1.4.1.jar:/opt/spark/jars/config-1.4.1.jar
+      - ./spark-jars/java-driver-core-shaded-4.13.0.jar:/opt/spark/jars/java-driver-core-shaded-4.13.0.jar
+      - ./spark-jars/java-driver-shaded-guava-25.1-jre-graal-sub-1.jar:/opt/spark/jars/java-driver-shaded-guava-25.1-jre-graal-sub-1.jar
+      - ./spark-jars/native-protocol-1.5.0.jar:/opt/spark/jars/native-protocol-1.5.0.jar
+      - ./spark-jars/reactive-streams-1.0.3.jar:/opt/spark/jars/reactive-streams-1.0.3.jar
+      - ./spark-jars/spark-cassandra-connector-driver_2.12-3.5.0.jar:/opt/spark/jars/spark-cassandra-connector-driver_2.12-3.5.0.jar
+      - ./spark-jars/spark-cassandra-connector_2.12-3.5.0.jar:/opt/spark/jars/spark-cassandra-connector_2.12-3.5.0.jar
 
 volumes:
   cassandra_data:
