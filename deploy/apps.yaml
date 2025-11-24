@@ -16,6 +16,7 @@ services:
       SPARK_CASSANDRA_CONNECTION_HOST: cassandra
       SPARK_CASSANDRA_CONNECTION_PORT: 9042
       SPARK_JOB_CRON: "* * 0 0 0 0"
+      JOB_PORT: 8000
     ports:
       - "8000:8000"
 
