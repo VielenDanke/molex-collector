@@ -6,7 +6,7 @@ networks:
 
 services:
   moex-spark:
-    image: vielen1991/moex-spark:v3
+    image: vielen1991/moex-spark:v4
     container_name: moex-spark
     hostname: moex-spark
     networks:
@@ -15,6 +15,7 @@ services:
       SPARK_MASTER_URL: spark://spark-master:7077
       SPARK_CASSANDRA_CONNECTION_HOST: cassandra
       SPARK_CASSANDRA_CONNECTION_PORT: 9042
+      SPARK_JOB_CRON: "* * 0 0 0 0"
     ports:
       - "8000:8000"
 
